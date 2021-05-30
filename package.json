@@ -1,0 +1,25 @@
+{
+  "name": "WhaleVillage-crawl",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/OS-2021/WhaleVillage-crawl.git",
+  "author": "Ho-Joon-Kim <a01098930999@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/",
+    "start:dev": "nodemon --exec ts-node src/index.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.9",
+    "geckodriver": "^2.0.0",
+    "mariadb": "^2.5.3",
+    "mysql2": "^2.2.5",
+    "node-schedule": "^2.0.0",
+    "puppeteer": "^9.1.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "selenium-webdriver": "^4.0.0-beta.3",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  }
+}
