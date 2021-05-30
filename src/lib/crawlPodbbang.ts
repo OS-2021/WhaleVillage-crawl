@@ -24,7 +24,10 @@ export const getLinkMp3 = (async(link) => {
     console.log(variable['media']['url']);
     console.log(variable['publishedAt']);
 
-    let sql = `INSERT INTO crawl(page, title, link) VALUES("podbbang", "${variable.title}", "${variable.media.url}");`;
+    let sql = `INSERT INTO crawl(page, title, link)
+    SELECT "podbbang", "${variable.title}", "${variable.media.url}"
+    FROM dual
+    WHERE NOT EXISTS (SELECT title FROM crawl WHERE title = "${variable.title}" AND link = "${variable.media.url}");`;
 	  await connection.query(sql,() =>{connection.release();});
     }
 
