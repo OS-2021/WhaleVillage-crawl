@@ -16,7 +16,7 @@ const connection = mariadb.createPool({
 schedule.scheduleJob ('00 00 * * * *', async () =>{
   console.log("crwalStart");
   await connection.query(`delete from crawl where isPrimary = false;`,() =>{connection.release();});
-  await getLinkMov('https://www.youtube.com/channel/UCKhHSmRlJxMaWZ-wuRKmBfA/videos');
+  await getLinkMov('https://www.youtube.com/channel/UCdZHf3X5Axeo4ZRI2dTaeVA/videos');
   await getLinkMp3('https://app-api6.podbbang.com/channels/1779381/episodes?offset=0&limit=1000&sort=desc&episode_id=0');
   console.log('end');
 });

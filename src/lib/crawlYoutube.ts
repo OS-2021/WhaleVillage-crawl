@@ -30,10 +30,8 @@ export const getLinkMov = (async(link) => {
     let nameList = [];
     let linkList = [];
     await $(`#video-title`).each(async (index, element) => { 
-      if (await $(element).text().indexOf('고래산마을') != -1) {
-        nameList.push($(element).text()); 
-        linkList.push('https://www.youtube.com/embed/' + $(element).attr('href').replace('/watch?v=',''));
-      }
+      nameList.push($(element).text()); 
+      linkList.push('https://www.youtube.com/embed/' + $(element).attr('href').replace('/watch?v=',''));
     });
 
     for (let i = 0; i < nameList.length; i++) {
