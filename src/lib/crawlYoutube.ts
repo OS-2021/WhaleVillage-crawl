@@ -1,25 +1,29 @@
-const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
-const mariadb = require('mariadb');
+const cheerio = require("cheerio");
+const puppeteer = require("puppeteer");
+const mariadb = require("mariadb");
 const connection = mariadb.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'whale'
+  host: "localhost",
+  user: "root",
+  password: "1234",
+  database: "whale",
+  charset: "utf8mb4",
 });
 
-export const getLinkMov = (async(link) => {
-  let data = await (async() => {
-    let today = await new Date();  
-    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']})
+export const getLinkMov = async (link) => {
+  let data = await (async () => {
+    let today = await new Date();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     await page.goto(link);
     try {
-      await page.waitForSelector('#items > ytd-grid-video-renderer');
-    }catch (error) {
+      await page.waitForSelector("#items > ytd-grid-video-renderer");
+    } catch (error) {
       await browser.close();
-      console.log('영상 없음');
+      console.log("영상 없음");
       return [];
     }
     const content = await page.content();
@@ -29,15 +33,18 @@ export const getLinkMov = (async(link) => {
     let list = [];
     let nameList = [];
     let linkList = [];
-    await $(`#video-title`).each(async (index, element) => { 
-      nameList.push($(element).text()); 
-      linkList.push('https://www.youtube.com/embed/' + $(element).attr('href').replace('/watch?v=',''));
+    await $(`#video-title`).each(async (index, element) => {
+      nameList.push($(element).text());
+      linkList.push(
+        "https://www.youtube.com/embed/" +
+          $(element).attr("href").replace("/watch?v=", "")
+      );
     });
 
     for (let i = 0; i < nameList.length; i++) {
       list[i] = {
-        "title": nameList[i],
-        "link": linkList[i]
+        title: nameList[i],
+        link: linkList[i],
       };
     }
     return list;
@@ -45,9 +52,14 @@ export const getLinkMov = (async(link) => {
 
   for await (let variable of data) {
     console.log(variable);
-    let sql = `INSERT INTO crawl(page, title, link) VALUES("youtube", "${variable.title}", "${variable.link}");`;
-	  await connection.query(sql,() =>{connection.release();});
+    let str = variable.title;
+    str = await str.replace(/'/g, "").replace(/"/g, "");
+
+    let sql = `INSERT INTO crawl(page, title, link) VALUES("youtube", "${str}", "${variable.link}");`;
+    await connection.query(sql, () => {
+      connection.release();
+    });
   }
 
   return;
-});
+};
